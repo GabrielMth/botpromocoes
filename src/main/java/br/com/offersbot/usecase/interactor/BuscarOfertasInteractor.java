@@ -1,4 +1,4 @@
-package br.com.offersbot.usecase.port.in;
+package br.com.offersbot.usecase.interactor;
 
 import br.com.offersbot.entity.Oferta;
 import br.com.offersbot.usecase.port.in.BuscarOfertasUseCase;

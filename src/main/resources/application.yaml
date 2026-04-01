@@ -1,3 +1,5 @@
 spring:
   application:
-    name: demo
+    name: bot$
+  profiles:
+    active: dev

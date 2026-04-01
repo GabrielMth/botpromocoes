@@ -1,3 +1,25 @@
 spring:
   application:
-    name: demo
+    name: bot$
+  datasource:
+    url: jdbc:h2:mem:ofertasdb
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+
+bot:
+  telegram:
+    token: 8794369560:AAEJIb6B1SSOBiTjAkAllYZb8Ib4n8XBMws
+    chat-id: -5035361960
+  scheduler:
+    intervalo: 30
+  filtro:
+    desconto-minimo: 20
+  afiliado:
+    matt-tool: 73548021
+    matt-word: gabrielsantos230
