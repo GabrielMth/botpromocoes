@@ -9,6 +9,7 @@ import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -77,20 +78,54 @@ public class MercadoLivreMapper {
             String valor = ariaLabel
                     .replace("Antes: ", "")
                     .replace("Agora: ", "")
-                    .replace("reais com ", ".")
-                    .replace(" centavos", "")
-                    .replace("reais", "")
-                    .replace(".", "")
-                    .replace(",", ".")
-                    .replaceAll("[^\\d.]", "")
                     .trim();
-            return new BigDecimal(valor);
+
+            if (valor.contains("reais com")) {
+                String[] partes = valor.split("reais com");
+                String reais = partes[0].trim().replace(".", "");
+                String centavos = partes[1].replace("centavos", "").trim();
+                return new BigDecimal(reais + "." + centavos);
+            } else {
+                String reais = valor
+                        .replace("reais", "")
+                        .replace(".", "")
+                        .trim();
+                return new BigDecimal(reais);
+            }
         } catch (NumberFormatException e) {
             return BigDecimal.ZERO;
         }
     }
 
     private DetalhesMercadoLivre extrairDetalhes(Element card) {
+
+        Optional<String> precoOutrosMeios = Optional.empty();
+        Element installments = card.selectFirst("span.poly-price__installments");
+        if (installments != null) {
+            Element precoOuEl = installments.selectFirst("span[aria-label]");
+            if (precoOuEl != null) {
+                precoOutrosMeios = Optional.of(
+                        parsearPreco(precoOuEl.attr("aria-label")).toString()
+                );
+            }
+        }
+
+        Optional<String> descontoOutrosMeios = Optional.empty();
+        if (precoOutrosMeios.isPresent()) {
+            try {
+                BigDecimal precoOrig = extrairPrecoOriginal(card);
+                BigDecimal precoOu = new BigDecimal(precoOutrosMeios.get());
+                if (precoOrig.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal desc = precoOrig.subtract(precoOu)
+                            .divide(precoOrig, 2, RoundingMode.HALF_UP)
+                            .multiply(BigDecimal.valueOf(100));
+                    descontoOutrosMeios = Optional.of(desc.intValue() + "% OFF");
+                }
+            } catch (Exception e) {
+                System.out.println("Ignorado.");
+            }
+        }
+
         return new DetalhesMercadoLivre(
                 extrairTexto(card, "span.poly-component__highlight"),
                 extrairTexto(card, "span.poly-coupons__pill"),
@@ -99,6 +134,9 @@ public class MercadoLivreMapper {
                 extrairTexto(card, "span.poly-reviews__rating"),
                 extrairTexto(card, "span.poly-reviews__total"),
                 extrairTexto(card, "span.poly-rebates__pill"),
+                extrairTexto(card, "span.poly-price__disc_label"),
+                precoOutrosMeios,
+                descontoOutrosMeios,
                 card.selectFirst("svg[aria-label='Enviado pelo FULL']") != null,
                 extrairTexto(card, "span.poly-shipping--next_day"),
                 extrairTexto(card, "span.poly-component__shipping span").isPresent()

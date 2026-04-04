@@ -21,8 +21,9 @@ public record Oferta(
         if (precoOriginal == null || precoOriginal.compareTo(BigDecimal.ZERO) == 0)
             return BigDecimal.ZERO;
         return precoOriginal.subtract(precoAtual)
-                .divide(precoOriginal, 2, RoundingMode.HALF_UP)
-                .multiply(BigDecimal.valueOf(100));
+                .divide(precoOriginal, 4, RoundingMode.FLOOR)
+                .multiply(BigDecimal.valueOf(100))
+                .setScale(0, RoundingMode.FLOOR);
     }
 
     public boolean temDesconto() {

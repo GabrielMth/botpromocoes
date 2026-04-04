@@ -10,6 +10,9 @@ public record DetalhesMercadoLivre(
         Optional<String> avaliacao,
         Optional<String> totalAvaliacoes,
         Optional<String> descontoMP,
+        Optional<String> descontoPix,
+        Optional<String> precoOutrosMeios,
+        Optional<String> descontoOutrosMeios,
         boolean fullMercadoLivre,
         Optional<String> entregaRapida,
         boolean freteGratis
