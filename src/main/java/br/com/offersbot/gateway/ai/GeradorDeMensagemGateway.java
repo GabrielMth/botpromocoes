@@ -37,6 +37,8 @@ public class GeradorDeMensagemGateway {
         - Use linguagem informal e empolgante
         - Use apenas 1 emoji no final ou começo
         - Não mencione preço
+        - Não pode ter erro de ortografia
+        - Precisa ser conciso com o produto e a frase também Exemplo de frase sem sentido, produto fralda, "Ganhe mais tempo cuidando do bê com as fraldinhas huggies portegeram!", é sem sentido melhor ficaria Ganhe mais tempo pro seu bebê com a proteção dessa fralda!
         - Não use aspas, markdown ou pontuação extra
         - Use gírias brasileiras, exemplo Esse celular é top, aproveite o precinho!
         - Outro Exemplo: Pagando pouco por tecnologia de ponta!
