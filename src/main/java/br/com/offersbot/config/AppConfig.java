@@ -23,6 +23,9 @@ public class AppConfig {
             OfertaRepository repository,
             List<NotificadorGateway> notificadores
     ) {
+        System.out.println("Notificadores carregados: " + notificadores.size());
+        notificadores.forEach(n -> System.out.println(" - " + n.getClass().getSimpleName()));
+
         return new BuscarOfertasInteractor(
                 gateways,
                 repository,

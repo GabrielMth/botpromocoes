@@ -43,12 +43,8 @@ public class TelegramNotificador implements NotificadorGateway {
 
             telegramClient.execute(sendPhoto);
 
-            Thread.sleep(20 * 60 * 1000L);
-
         } catch (TelegramApiException e) {
             System.out.println("Erro ao enviar para Telegram: " + e.getMessage());
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         }
     }
 

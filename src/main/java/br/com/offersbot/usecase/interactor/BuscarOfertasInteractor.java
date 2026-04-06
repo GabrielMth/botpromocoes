@@ -40,5 +40,11 @@ public class BuscarOfertasInteractor implements BuscarOfertasUseCase {
     private void processarOferta(Oferta oferta) {
         notificadores.forEach(notificador -> notificador.enviar(oferta));
         repository.salvar(oferta);
+
+        try {
+            Thread.sleep(20 * 60 * 1000L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
